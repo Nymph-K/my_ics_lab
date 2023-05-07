@@ -56,7 +56,7 @@ uint32_t cache_read(uintptr_t addr) {
   uintptr_t tag_addr = addr & tag_mask;
   set = INDEX(addr);
   offset = addr & offset_mask;
-  printf("Read addr  = 0x%8lX \t set = 0x%4lX \t ", addr, set);
+  printf("Read addr  = 0x%8lX \t tag = 0x%8lX \t set = 0x%4lX \t ", addr, tag_addr, set);
   for (size_t way = 0; way < associativity; way++)
   {
     if((TAG(set)[way] == tag_addr) && ((V_D(set)[way] & VALID) == VALID)) // hit
@@ -88,7 +88,7 @@ uint32_t cache_read(uintptr_t addr) {
     {
       w_replace_cnt++;
       uintptr_t block_write = (TAG(set)[way_choose] >> BLOCK_WIDTH) | set;
-      printf("\t mem-write addr  = 0x%8lX, set = 0x%4lX, cache off = 0x%lX\n", block_write << BLOCK_WIDTH, INDEX((block_write << BLOCK_WIDTH)), (set * associativity + way_choose) * BLOCK_SIZE + offset);
+      printf("\t mem-write tag  = 0x%8lX, set = 0x%4lX, cache off = 0x%lX\n", TAG(set)[way_choose], INDEX((block_write << BLOCK_WIDTH)), (set * associativity + way_choose) * BLOCK_SIZE + offset);
       mem_write(block_write, (uint8_t *)CACHE(set, way_choose, 0));
     }
     else printf("\n");
@@ -116,7 +116,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   uintptr_t tag_addr = addr & tag_mask;
   set = INDEX(addr);
   offset = addr & offset_mask;
-  printf("Write addr = 0x%8lX \t set = 0x%4lX \t ", addr, set);
+  printf("Write addr = 0x%8lX \t tag = 0x%8lX \t set = 0x%4lX \t ", addr, tag_addr, set);
   for (size_t way = 0; way < associativity; way++)
   {
     if((TAG(set)[way] == tag_addr) && ((V_D(set)[way] & VALID) == VALID)) // hit

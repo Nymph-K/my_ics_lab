@@ -87,7 +87,7 @@ uint32_t cache_read(uintptr_t addr) {
     {
       r_replace_cnt++;
       uintptr_t block_write = (TAG(set)[way_choose] >> BLOCK_WIDTH) | set;
-      printf("mem-write addr  = 0x%8lX, set = 0x%4lX, way = %d", block_write << BLOCK_WIDTH, INDEX(block_write << BLOCK_WIDTH), way_choose);
+      printf("mem-write addr  = 0x%8lX, set = 0x%4lX, ", block_write << BLOCK_WIDTH, INDEX(block_write << BLOCK_WIDTH));
       mem_write(block_write, (uint8_t *)CACHE(set, way_choose, 0));
     }
   }
@@ -95,7 +95,7 @@ uint32_t cache_read(uintptr_t addr) {
   {
     way_choose = way_empty;
   }
-  printf("\n");
+  printf("way = %lu\n", way_choose);
   uintptr_t block_read = addr >> BLOCK_WIDTH;
   mem_read(block_read, (uint8_t *)CACHE(set, way_choose, 0));
   TAG(set)[way_choose] = tag_addr;
@@ -146,7 +146,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
     {
       w_replace_cnt++;
       uintptr_t block_write = (TAG(set)[way_choose] >> BLOCK_WIDTH) | set;
-      printf("mem-write addr  = 0x%8lX, set = 0x%4lX, way = %d", block_write << BLOCK_WIDTH, INDEX(block_write << BLOCK_WIDTH), way_choose);
+      printf("mem-write addr  = 0x%8lX, set = 0x%4lX, ", block_write << BLOCK_WIDTH, INDEX(block_write << BLOCK_WIDTH));
       mem_write(block_write, (uint8_t *)CACHE(set, way_choose, 0));
     }
   }
@@ -154,7 +154,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   {
     way_choose = way_empty;
   }
-  printf("\n");
+  printf("way = %lu\n", way_choose);
   uintptr_t block_read = addr >> BLOCK_WIDTH;
   mem_read(block_read, (uint8_t *)CACHE(set, way_choose, 0));
   TAG(set)[way_choose] = tag_addr;

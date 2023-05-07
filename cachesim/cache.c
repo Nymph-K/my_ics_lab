@@ -86,7 +86,7 @@ uint32_t cache_read(uintptr_t addr) {
     {
       r_replace_cnt++;
       uintptr_t block_write = (TAG(set)[way_choose] >> BLOCK_WIDTH) | set;
-      printf("mem-write block  = 0x%lX, cache addr = 0x%lX\n", block_write, CACHE(set, way_choose, 0));
+      printf("mem-write block  = 0x%lX, cache addr = 0x%hhn\n", block_write, CACHE(set, way_choose, 0));
       mem_write(block_write, (uint8_t *)CACHE(set, way_choose, 0));
     }
   }
@@ -143,7 +143,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
     {
       w_replace_cnt++;
       uintptr_t block_write = (TAG(set)[way_choose] >> BLOCK_WIDTH) | set;
-      printf("mem-write block  = 0x%lX, cache addr = 0x%lX\n", block_write, CACHE(set, way_choose, 0));
+      printf("mem-write block  = 0x%lX, cache addr = 0x%hhn\n", block_write, CACHE(set, way_choose, 0));
       mem_write(block_write, (uint8_t *)CACHE(set, way_choose, 0));
     }
   }

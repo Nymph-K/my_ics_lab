@@ -30,14 +30,18 @@ struct trace {
   uint32_t data;
 };
 
+static uint64_t r_trace = 0;
+static uint64_t w_trace = 0;
 static void trace_exec(struct trace *t, bool is_check) {
   if (t->t.is_write) {
+    w_trace++;
     cpu_write(t->t.addr, t->t.len, t->data);
     if (is_check) {
       cpu_uncache_write(t->t.addr, t->t.len, t->data);
     }
   }
   else {
+    r_trace++;
     uint32_t ret = cpu_read(t->t.addr, t->t.len);
     if (is_check) {
       uint32_t ret_uncache = cpu_uncache_read(t->t.addr, t->t.len);
@@ -133,5 +137,6 @@ int main(int argc, char *argv[]) {
 
   display_statistic();
 
+  printf("r_trace = %lX, w_trace = %lX\n", r_trace, w_trace);
   return 0;
 }

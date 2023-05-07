@@ -14,6 +14,7 @@ static uint64_t w_cnt = 0;
 static uint64_t w_hit_cnt = 0;
 static uint64_t w_miss_cnt = 0;
 static uint64_t w_replace_cnt = 0;
+static bool     stop_cnt = false;
 
 void cycle_increase(int n) { cycle_cnt += n; }
 
@@ -52,7 +53,7 @@ static uintptr_t offset_mask = 0;
 uint32_t cache_read(uintptr_t addr) {
   cycle_increase(1);
   addr = addr & ~0x3;
-  r_cnt++;
+  if(!stop_cnt) r_cnt++;
   uintptr_t tag_addr = addr & tag_mask;
   set = INDEX(addr);
   offset = addr & offset_mask;
@@ -62,14 +63,14 @@ uint32_t cache_read(uintptr_t addr) {
     if((TAG(set)[way] == tag_addr) && ((V_D(set)[way] & VALID) == VALID)) // hit
     {
       //printf("way = %lu\n", way);
-      r_hit_cnt++;
+      if(!stop_cnt) r_hit_cnt++;
       cycle_increase(1);
       return *(uint32_t *)CACHE(set, way, offset);
     }
   }
 
   /**************** miss ***************/
-  r_miss_cnt++;
+  if(!stop_cnt) r_miss_cnt++;
   int way_empty = -1;
   int way_choose = -1;
   for (size_t i = 0; i < associativity; i++)
@@ -86,7 +87,7 @@ uint32_t cache_read(uintptr_t addr) {
     //printf("way = %d ", way_choose);
     if((V_D(set)[way_choose] & DIRTY) == DIRTY) // dirty
     {
-      r_replace_cnt++;
+      if(!stop_cnt) r_replace_cnt++;
       uintptr_t block_write = (TAG(set)[way_choose] >> BLOCK_WIDTH) | set;
       //printf("\t mem-write tag  = 0x%8lX, set = 0x%4lX, cache off = 0x%lX\n", TAG(set)[way_choose], INDEX((block_write << BLOCK_WIDTH)), (set * associativity + way_choose) * BLOCK_SIZE + offset);
       mem_write(block_write, (uint8_t *)CACHE(set, way_choose, 0));
@@ -112,7 +113,7 @@ uint32_t cache_read(uintptr_t addr) {
 void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   cycle_increase(1);
   addr = addr & ~0x3;
-  w_cnt++;
+  if(!stop_cnt) w_cnt++;
   uintptr_t tag_addr = addr & tag_mask;
   set = INDEX(addr);
   offset = addr & offset_mask;
@@ -122,7 +123,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
     if((TAG(set)[way] == tag_addr) && ((V_D(set)[way] & VALID) == VALID)) // hit
     {
       //printf("way = %lu\n", way);
-      w_hit_cnt++;
+      if(!stop_cnt) w_hit_cnt++;
       cycle_increase(1);
       *(uint32_t *)CACHE(set, way, offset) = (data & wmask) | (*(uint32_t *)CACHE(set, way, offset) & ~wmask);
       V_D(set)[way] = VALID_DIRTY;
@@ -131,7 +132,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   }
 
   /**************** miss ***************/
-  w_miss_cnt++;
+  if(!stop_cnt) w_miss_cnt++;
   int way_empty = -1;
   int way_choose = -1;
   for (size_t i = 0; i < associativity; i++)
@@ -148,7 +149,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
     //printf("way = %d ", way_choose);
     if((V_D(set)[way_choose] & DIRTY) == DIRTY) // dirty
     {
-      w_replace_cnt++;
+      if(!stop_cnt) w_replace_cnt++;
       uintptr_t block_write = (TAG(set)[way_choose] >> BLOCK_WIDTH) | set;
       //printf("\t mem-write tag  = 0x%8lX, set = 0x%4lX, cache off = 0x%lX\n", TAG(set)[way_choose], INDEX((block_write << BLOCK_WIDTH)), (set * associativity + way_choose) * BLOCK_SIZE + offset);
       mem_write(block_write, (uint8_t *)CACHE(set, way_choose, 0));
@@ -191,4 +192,8 @@ void display_statistic(void) {
   printf("Read:   %8ld\t %8ld(%2.2f %%)\t %8ld(%2.2f %%)\t %8ld\n", r_cnt, r_hit_cnt, (float)r_hit_cnt/r_cnt*100, r_miss_cnt, (float)r_miss_cnt/r_cnt*100, r_replace_cnt);
   printf("Write:  %8ld\t %8ld(%2.2f %%)\t %8ld(%2.2f %%)\t %8ld\n", w_cnt, w_hit_cnt, (float)w_hit_cnt/w_cnt*100, w_miss_cnt, (float)w_miss_cnt/w_cnt*100, w_replace_cnt);
   printf("Total:  %8ld\t %8ld(%2.2f %%)\t %8ld(%2.2f %%)\t %8ld\n", r_cnt + w_cnt, r_hit_cnt + w_hit_cnt, (float)(r_hit_cnt + w_hit_cnt)/(r_cnt + w_cnt)*100, r_miss_cnt + w_miss_cnt, (float)(r_miss_cnt + w_miss_cnt)/(r_cnt + w_cnt)*100, r_replace_cnt + w_replace_cnt);
+}
+
+void stopCount(void) {
+  stop_cnt = true;
 }

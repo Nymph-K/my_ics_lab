@@ -67,6 +67,7 @@ static void random_trace(void) {
 
 static void check_diff(void) {
   uintptr_t addr = 0;
+  stopCount();
   for (addr = 0; addr < MEM_SIZE; addr += 4) {
     uint32_t ret = cpu_read(addr, 4);
     uint32_t ret_uncache = cpu_uncache_read(addr, 4);

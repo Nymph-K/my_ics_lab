@@ -91,7 +91,7 @@ uint32_t cache_read(uintptr_t addr) {
       //printf("\t mem-write tag  = 0x%8lX, set = 0x%4lX, cache off = 0x%lX\n", TAG(set)[way_choose], INDEX((block_write << BLOCK_WIDTH)), (set * associativity + way_choose) * BLOCK_SIZE + offset);
       mem_write(block_write, (uint8_t *)CACHE(set, way_choose, 0));
     }
-    else //printf("\n");
+    //else //printf("\n");
   }
   else
   {
@@ -152,7 +152,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
       //printf("\t mem-write tag  = 0x%8lX, set = 0x%4lX, cache off = 0x%lX\n", TAG(set)[way_choose], INDEX((block_write << BLOCK_WIDTH)), (set * associativity + way_choose) * BLOCK_SIZE + offset);
       mem_write(block_write, (uint8_t *)CACHE(set, way_choose, 0));
     }
-    else //printf("\n");
+    //else //printf("\n");
   }
   else
   {

@@ -43,7 +43,7 @@ static uintptr_t offset = 0;
 static uintptr_t offset_mask = 0;
 
 #define INDEX(addr)               ((addr & set_mask) >> BLOCK_WIDTH)
-#define TAG(set)                ((uintptr_t *)(tag + sizeof(uintptr_t) * set * associativity))
+#define TAG(set)                ((uintptr_t *)(tag + set * associativity))
 #define V_D(set)                ((uint8_t *)(valid_dirty + set * associativity))
 #define CACHE(set, way, offset) (cache + (set * associativity + way) * BLOCK_SIZE + offset)
 
@@ -178,9 +178,9 @@ void init_cache(int total_size_width, int associativity_width) {
   set_mask = (uintptr_t)mask_with_len(set_size_width) << BLOCK_WIDTH;
   offset_mask = (uintptr_t)mask_with_len(BLOCK_WIDTH);
 
-  cache = (uint8_t *)malloc(sizeof(uint8_t) * total_size);
+  cache = (uint8_t *)malloc(total_size);
   tag = (uintptr_t *)malloc(sizeof(uintptr_t) * associativity * set_size);
-  valid_dirty = (uint8_t *)malloc(sizeof(uint8_t) * associativity * set_size);
+  valid_dirty = (uint8_t *)malloc(associativity * set_size);
   memset(valid_dirty, NOT_VALID, associativity * set_size);
 }
 

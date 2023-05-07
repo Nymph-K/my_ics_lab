@@ -116,7 +116,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
     {
       w_hit_cnt++;
       cycle_increase(1);
-      *(uint32_t *)CACHE(set, way, offset) = (data * wmask) | (*(uint32_t *)CACHE(set, way, offset) | ~wmask);
+      *(uint32_t *)CACHE(set, way, offset) = (data & wmask) | (*(uint32_t *)CACHE(set, way, offset) & ~wmask);
       V_D(set)[way] = VALID_DIRTY;
     }
   }
@@ -150,7 +150,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   uintptr_t block_read = addr >> BLOCK_WIDTH;
   mem_read(block_read, (uint8_t *)CACHE(set, way_choose, 0));
   TAG(set)[way_choose] = tag_addr;
-  *(uint32_t *)CACHE(set, way_choose, offset) = (data * wmask) | (*(uint32_t *)CACHE(set, way_choose, offset) | ~wmask);
+  *(uint32_t *)CACHE(set, way_choose, offset) = (data & wmask) | (*(uint32_t *)CACHE(set, way_choose, offset) & ~wmask);
   V_D(set)[way_choose] = VALID_DIRTY;
 }
 

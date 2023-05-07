@@ -51,6 +51,7 @@ static uintptr_t offset_mask = 0;
 // 若缺失，需要先从内存中读入数据
 uint32_t cache_read(uintptr_t addr) {
   cycle_increase(1);
+  addr = addr & ~0x3;
   r_cnt++;
   uintptr_t tag_addr = addr & tag_mask;
   set = INDEX(addr);
@@ -104,6 +105,7 @@ uint32_t cache_read(uintptr_t addr) {
 // 若缺失，需要从先内存中读入数据
 void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   cycle_increase(1);
+  addr = addr & ~0x3;
   w_cnt++;
   uintptr_t tag_addr = addr & tag_mask;
   set = INDEX(addr);

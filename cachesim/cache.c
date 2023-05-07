@@ -114,7 +114,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   uintptr_t tag_addr = addr & tag_mask;
   set = INDEX(addr);
   offset = addr & offset_mask;
-  printf("Write addr = 0x%8lX \t set = 0x%4lX \t", addr, set);
+  printf("Write addr = 0x%8lX \t set = 0x%4lX \t ", addr, set);
   for (size_t way = 0; way < associativity; way++)
   {
     if((TAG(set)[way] == tag_addr) && ((V_D(set)[way] & VALID) == VALID)) // hit

@@ -137,6 +137,6 @@ int main(int argc, char *argv[]) {
 
   display_statistic();
 
-  printf("r_trace = %lX, w_trace = %lX\n", r_trace, w_trace);
+  printf("r_trace = %lX, w_trace = %lX, total = %ld = %lX\n", r_trace, w_trace, r_trace + w_trace);
   return 0;
 }

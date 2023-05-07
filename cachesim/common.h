@@ -17,6 +17,7 @@ typedef uint8_t bool;
 #define true 1
 #define false 0
 
+static inline uint32_t choose(uint32_t n) { return rand() % n; }
 void cycle_increase(int n);
 
 #endif

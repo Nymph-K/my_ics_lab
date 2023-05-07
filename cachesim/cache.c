@@ -126,6 +126,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
       cycle_increase(1);
       *(uint32_t *)CACHE(set, way, offset) = (data & wmask) | (*(uint32_t *)CACHE(set, way, offset) & ~wmask);
       V_D(set)[way] = VALID_DIRTY;
+      return ;
     }
   }
 
@@ -164,6 +165,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   TAG(set)[way_choose] = tag_addr;
   *(uint32_t *)CACHE(set, way_choose, offset) = (data & wmask) | (*(uint32_t *)CACHE(set, way_choose, offset) & ~wmask);
   V_D(set)[way_choose] = VALID_DIRTY;
+  return ;
 }
 
 // 初始化一个数据大小为 2^total_size_width B，关联度为 2^associativity_width 的 cache

@@ -50,6 +50,7 @@ static uintptr_t offset_mask = 0;
 // 从 cache 中读出 addr 地址处的 4 字节数据
 // 若缺失，需要先从内存中读入数据
 uint32_t cache_read(uintptr_t addr) {
+  printf("Read addr  = %p\n", addr);
   cycle_increase(1);
   addr = addr & ~0x3;
   r_cnt++;
@@ -104,6 +105,7 @@ uint32_t cache_read(uintptr_t addr) {
 // 例如当 wmask 为 0xff 时，只写入低8比特
 // 若缺失，需要从先内存中读入数据
 void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
+  printf("Write addr = %p\n", addr);
   cycle_increase(1);
   addr = addr & ~0x3;
   w_cnt++;

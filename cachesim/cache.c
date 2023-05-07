@@ -188,7 +188,7 @@ void init_cache(int total_size_width, int associativity_width) {
 
 void display_statistic(void) {
   printf("        Total count  \t Hit count (rate) \t Miss count (rate) \t Replace count\n");
-  printf("Read:   %8ld\t %8ld(%f)\t %8ld(%f)\t %8ld\n", r_cnt, r_hit_cnt, (float)r_hit_cnt/r_cnt, r_miss_cnt, (float)r_miss_cnt/r_cnt, r_replace_cnt);
-  printf("Write:  %8ld\t %8ld(%f)\t %8ld(%f)\t %8ld\n", w_cnt, w_hit_cnt, (float)w_hit_cnt/w_cnt, w_miss_cnt, (float)w_miss_cnt/r_cnt, w_replace_cnt);
-  printf("Total:  %8ld\t %8ld(%f)\t %8ld(%f)\t %8ld\n", r_cnt + w_cnt, r_hit_cnt + w_hit_cnt, (float)(r_hit_cnt + w_hit_cnt)/(r_cnt + w_cnt), r_miss_cnt + w_miss_cnt, (float)(r_miss_cnt + w_miss_cnt)/(r_cnt + w_cnt), r_replace_cnt + w_replace_cnt);
+  printf("Read:   %8ld\t %8ld(%2.2f %%)\t %8ld(%2.2f %%)\t %8ld\n", r_cnt, r_hit_cnt, (float)r_hit_cnt/r_cnt*100, r_miss_cnt, (float)r_miss_cnt/r_cnt*100, r_replace_cnt);
+  printf("Write:  %8ld\t %8ld(%2.2f %%)\t %8ld(%2.2f %%)\t %8ld\n", w_cnt, w_hit_cnt, (float)w_hit_cnt/w_cnt*100, w_miss_cnt, (float)w_miss_cnt/r_cnt*100, w_replace_cnt);
+  printf("Total:  %8ld\t %8ld(%2.2f %%)\t %8ld(%2.2f %%)\t %8ld\n", r_cnt + w_cnt, r_hit_cnt + w_hit_cnt, (float)(r_hit_cnt + w_hit_cnt)/(r_cnt + w_cnt)*100, r_miss_cnt + w_miss_cnt, (float)(r_miss_cnt + w_miss_cnt)/(r_cnt + w_cnt)*100, r_replace_cnt + w_replace_cnt);
 }

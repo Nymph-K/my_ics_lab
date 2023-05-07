@@ -50,13 +50,13 @@ static uintptr_t offset_mask = 0;
 // 从 cache 中读出 addr 地址处的 4 字节数据
 // 若缺失，需要先从内存中读入数据
 uint32_t cache_read(uintptr_t addr) {
-  printf("Read addr  = 0x%lX \t", addr);
   cycle_increase(1);
   addr = addr & ~0x3;
   r_cnt++;
   uintptr_t tag_addr = addr & tag_mask;
   set = INDEX(addr);
   offset = addr & offset_mask;
+  printf("Read addr  = 0x%8lX \t set = 0x%4lX \t", addr, set);
   for (size_t way = 0; way < associativity; way++)
   {
     if((TAG(set)[way] == tag_addr) && ((V_D(set)[way] & VALID) == VALID)) // hit
@@ -87,7 +87,7 @@ uint32_t cache_read(uintptr_t addr) {
     {
       r_replace_cnt++;
       uintptr_t block_write = (TAG(set)[way_choose] >> BLOCK_WIDTH) | set;
-      printf("mem-write addr  = 0x%lX, cache addr = %p", block_write << BLOCK_WIDTH, CACHE(set, way_choose, 0));
+      printf("mem-write addr  = 0x%8lX, set = 0x%4lX", block_write << BLOCK_WIDTH, INDEX(block_write << BLOCK_WIDTH));
       mem_write(block_write, (uint8_t *)CACHE(set, way_choose, 0));
     }
   }
@@ -108,13 +108,13 @@ uint32_t cache_read(uintptr_t addr) {
 // 例如当 wmask 为 0xff 时，只写入低8比特
 // 若缺失，需要从先内存中读入数据
 void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
-  printf("Write addr = 0x%lX \t", addr);
   cycle_increase(1);
   addr = addr & ~0x3;
   w_cnt++;
   uintptr_t tag_addr = addr & tag_mask;
   set = INDEX(addr);
   offset = addr & offset_mask;
+  printf("Write addr = 0x%8lX \t set = 0x%4lX \t", addr, set);
   for (size_t way = 0; way < associativity; way++)
   {
     if((TAG(set)[way] == tag_addr) && ((V_D(set)[way] & VALID) == VALID)) // hit
@@ -146,7 +146,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
     {
       w_replace_cnt++;
       uintptr_t block_write = (TAG(set)[way_choose] >> BLOCK_WIDTH) | set;
-      printf("mem-write addr  = 0x%lX, cache addr = %p", block_write << BLOCK_WIDTH, CACHE(set, way_choose, 0));
+      printf("mem-write addr  = 0x%8lX, set = 0x%4lX", block_write << BLOCK_WIDTH, INDEX(block_write << BLOCK_WIDTH));
       mem_write(block_write, (uint8_t *)CACHE(set, way_choose, 0));
     }
   }

@@ -178,9 +178,9 @@ void init_cache(int total_size_width, int associativity_width) {
   set_mask = (uintptr_t)mask_with_len(set_size_width) << BLOCK_WIDTH;
   offset_mask = (uintptr_t)mask_with_len(BLOCK_WIDTH);
 
-  cache = (uint8_t *)malloc(total_size);
+  cache = (uint8_t *)malloc(sizeof(uint8_t) * total_size);
   tag = (uintptr_t *)malloc(sizeof(uintptr_t) * associativity * set_size);
-  valid_dirty = (uint8_t *)malloc(associativity * set_size);
+  valid_dirty = (uint8_t *)malloc(sizeof(uint8_t) * associativity * set_size);
   memset(valid_dirty, NOT_VALID, associativity * set_size);
 }
 

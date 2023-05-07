@@ -86,7 +86,7 @@ uint32_t cache_read(uintptr_t addr) {
     //printf("way = %d ", way_choose);
     if((V_D(set)[way_choose] & DIRTY) == DIRTY) // dirty
     {
-      w_replace_cnt++;
+      r_replace_cnt++;
       uintptr_t block_write = (TAG(set)[way_choose] >> BLOCK_WIDTH) | set;
       //printf("\t mem-write tag  = 0x%8lX, set = 0x%4lX, cache off = 0x%lX\n", TAG(set)[way_choose], INDEX((block_write << BLOCK_WIDTH)), (set * associativity + way_choose) * BLOCK_SIZE + offset);
       mem_write(block_write, (uint8_t *)CACHE(set, way_choose, 0));

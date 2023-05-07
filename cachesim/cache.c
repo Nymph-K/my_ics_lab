@@ -142,6 +142,7 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   if (way_empty == -1) // full
   {
     way_choose = choose(associativity); // random replace
+    printf("way = %d, ", way_choose);
     if((V_D(set)[way_choose] & DIRTY) == DIRTY) // dirty
     {
       w_replace_cnt++;
@@ -153,8 +154,9 @@ void cache_write(uintptr_t addr, uint32_t data, uint32_t wmask) {
   else
   {
     way_choose = way_empty;
+    printf("way = %d, ", way_choose);
   }
-  printf("way = %d\n", way_choose);
+  printf("\n");
   uintptr_t block_read = addr >> BLOCK_WIDTH;
   mem_read(block_read, (uint8_t *)CACHE(set, way_choose, 0));
   TAG(set)[way_choose] = tag_addr;
